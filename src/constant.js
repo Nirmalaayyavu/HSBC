@@ -1,0 +1,1 @@
+export const DROPDOWN_TITLE="Please select the city for which you need to know the time"

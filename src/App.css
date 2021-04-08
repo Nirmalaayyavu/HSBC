@@ -1,0 +1,9 @@
+.App {
+  text-align: center;
+}
+
+.dropdown-menu{
+  max-height:200px;
+  overflow: scroll;
+  width:32%
+}
