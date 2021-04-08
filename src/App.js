@@ -24,7 +24,7 @@ function App() {
     const getTimeZoneResponse = axios.get(timezoneAPI)
     const getDefaultTimeResponse = axios.get(defaultTimezoneAPI)
 
-     axios.all([getTimeZoneResponse, getDefaultTimeResponse]).then(
+    axios.all([getTimeZoneResponse, getDefaultTimeResponse]).then(
       axios.spread((...response) => {
         const timeZoneList = response[0].data.zones
         const defaultData = {
@@ -33,7 +33,7 @@ function App() {
         }
         setTimezoneList(timeZoneList)
         setDefaultTime(defaultData)
-        
+
       })
     ).catch((errors) => {
       console.log("error occured ")
@@ -58,17 +58,21 @@ function App() {
     getUpdateTime(value)
   }
 
+  const refresh = () => {
+    setTitle(display.name)
+    getUpdateTime(display.name)
+  }
+
   useEffect(() => {
     fetchData()
-
   }, [])
 
   useEffect(() => {
-    setInterval(() => {
-      if (title !== Constant.DROPDOWN_TITLE)
-        handleChange(title)
+    const interval = setInterval(() => {
+      refresh()
     }, 5000);
-  }, [title])
+    return () => clearInterval(interval);
+  }, [display.name]);
 
   return (
     <div className="App">
@@ -80,18 +84,18 @@ function App() {
           <br />
           <h2 data-testid="time-display"> Time in  {display.name ? display.name.replace('/', ' - ') : ''} : {moment(display.time).format("hh:mm A")} </h2>
           <br />
-          <DropdownButton id="country-list"   title={title}>
+          <DropdownButton id="country-list" title={title}>
             {timezoneList.map((items, i) => (
-              <Dropdown.Item value={items.zoneName} key={i}
-                onSelect={() => handleChange(items.zoneName)} data-testid="list">
+              <Dropdown.Item key={i} eventKey={items.zoneName}
+                onSelect={(e) => handleChange(e)} data-testid="list">
                 {items.zoneName.replace('/', ' - ')}</Dropdown.Item>
             ))}
           </DropdownButton>
-          </div>
+        </div>
       )}
     </div>
   )
-      
+
 }
 
 export default App;

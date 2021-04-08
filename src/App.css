@@ -7,3 +7,6 @@
   overflow: scroll;
   width:32%
 }
+.btn,.dropdown-menu.show{
+  min-width:460px;
+}
