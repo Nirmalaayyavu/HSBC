@@ -17,6 +17,10 @@ function App() {
   const [title, setTitle] = useState(Constant.DROPDOWN_TITLE)
 
 
+  /*
+    A method which gets triggered after the page load .
+    It gets the default time in London location and list of countries with their respective time in that zone.
+    */ 
   const fetchData = () => {
     const timezoneAPI = 'http://api.timezonedb.com/v2.1/list-time-zone?key=XWSLLPX5RMIZ&format=json&zone=Europe/*'
     const defaultTimezoneAPI = 'http://api.timezonedb.com/v2/get-time-zone?key=XWSLLPX5RMIZ&format=json&by=zone&zone=Europe/London'
@@ -40,6 +44,9 @@ function App() {
     })
   }
 
+  /* A method to get the updated time in the selected country with zone name 
+   * @param {string} zoneName returns the value of the selected country with  selected zone name   
+  */
 
   const getUpdateTime = (zoneName) => {
     axios.get(`http://api.timezonedb.com/v2/get-time-zone?key=XWSLLPX5RMIZ&format=json&by=zone&zone=${zoneName}`)
@@ -53,11 +60,17 @@ function App() {
         console.log("error occured")
       })
   }
+
+  /*  The event callback method when the dropdown value is changed/selected
+   *   @param {string} value of format 'Europe\/London'
+   */
   const handleChange = (value) => {
     setTitle(value)
     getUpdateTime(value)
   }
 
+
+  /* The callback method which will get the updatedTime  for every 5 seconds */
   const refresh = () => {
     setTitle(display.name)
     getUpdateTime(display.name)
@@ -67,6 +80,7 @@ function App() {
     fetchData()
   }, [])
 
+  /*  The method to trigger the fecth call for every 5 seconds */
   useEffect(() => {
     const interval = setInterval(() => {
       refresh()
@@ -82,7 +96,7 @@ function App() {
         <div data-testid="timerSection">
           <h1>React Timezone Example</h1>
           <br />
-          <h2 data-testid="time-display"> Time in  {display.name ? display.name.replace('/', ' - ') : ''} : {moment(display.time).format("hh:mm A")} </h2>
+          <h2 data-testid="time-display"> Time in  {display.name ? display.name.replace('/', ' - ') : ''} : {moment(display.time).format("hh:mm:ss A")} </h2>
           <br />
           <DropdownButton id="country-list" title={title}>
             {timezoneList.map((items, i) => (
